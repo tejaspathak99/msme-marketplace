@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Buyer Dashboard - MSME Marketplace{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Buyer Dashboard</h1>
+    <a href="{{ url_for('search') }}" class="btn btn-primary">Advanced Search</a>
+</div>
+
+<div class="mb-4">
+    <form action="{{ url_for('search') }}" method="GET" class="row g-3">
+        <div class="col-md-10">
+            <input type="text" class="form-control" name="keyword" placeholder="Search products...">
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100">Search</button>
+        </div>
+    </form>
+</div>
+
+<h3 class="mb-3">All Products</h3>
+
+{% if products %}
+<div class="row">
+    {% for product in products %}
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            {% if product.image_filename %}
+            <img src="{{ product.image_filename }}" class="card-img-top" alt="{{ product.name }}">
+            {% else %}
+            <div class="card-img-top bg-secondary text-white d-flex align-items-center justify-content-center" style="height: 200px;">
+                No Image
+            </div>
+            {% endif %}
+            <div class="card-body">
+                <h5 class="card-title">{{ product.name }}</h5>
+                <p class="card-text">{{ product.description[:100] }}{% if product.description|length > 100 %}...{% endif %}</p>
+                <p class="mb-1"><strong>Category:</strong> {{ product.category }}</p>
+                <p class="mb-1"><strong>Price:</strong> ${{ "%.2f"|format(product.price) }}</p>
+                <p class="mb-1"><strong>Min Order:</strong> {{ product.min_order_qty }}</p>
+                <p class="mb-2"><small class="text-muted">Supplier: {{ product.supplier.username }}</small></p>
+                <a href="{{ url_for('view_product', id=product.id) }}" class="btn btn-primary w-100">View Details</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="alert alert-info">
+    <p class="mb-0">No products available at the moment.</p>
+</div>
+{% endif %}
+{% endblock %}

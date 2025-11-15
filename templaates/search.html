@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}Search Products - MSME Marketplace{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Search Products</h1>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <form action="{{ url_for('search') }}" method="GET">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label for="keyword" class="form-label">Keyword</label>
+                    <input type="text" class="form-control" id="keyword" name="keyword" 
+                           value="{{ keyword }}" placeholder="Search by name or description">
+                </div>
+                <div class="col-md-4">
+                    <label for="category" class="form-label">Category</label>
+                    <select class="form-select" id="category" name="category">
+                        <option value="">All Categories</option>
+                        {% for cat in categories %}
+                        <option value="{{ cat }}" {% if cat == selected_category %}selected{% endif %}>{{ cat }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="sort" class="form-label">Sort By</label>
+                    <select class="form-select" id="sort" name="sort">
+                        <option value="">Default</option>
+                        <option value="price_low" {% if sort_by == 'price_low' %}selected{% endif %}>Price: Low to High</option>
+                        <option value="price_high" {% if sort_by == 'price_high' %}selected{% endif %}>Price: High to Low</option>
+                    </select>
+                </div>
+            </div>
+            <div class="mt-3">
+                <button type="submit" class="btn btn-primary">Search</button>
+                <a href="{{ url_for('search') }}" class="btn btn-secondary">Clear</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<h3 class="mb-3">Results ({{ products|length }} products found)</h3>
+
+{% if products %}
+<div class="row">
+    {% for product in products %}
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            {% if product.image_filename %}
+            <img src="{{ product.image_filename }}" class="card-img-top" alt="{{ product.name }}">
+            {% else %}
+            <div class="card-img-top bg-secondary text-white d-flex align-items-center justify-content-center" style="height: 200px;">
+                No Image
+            </div>
+            {% endif %}
+            <div class="card-body">
+                <h5 class="card-title">{{ product.name }}</h5>
+                <p class="card-text">{{ product.description[:100] }}{% if product.description|length > 100 %}...{% endif %}</p>
+                <p class="mb-1"><strong>Category:</strong> {{ product.category }}</p>
+                <p class="mb-1"><strong>Price:</strong> ${{ "%.2f"|format(product.price) }}</p>
+                <p class="mb-1"><strong>Min Order:</strong> {{ product.min_order_qty }}</p>
+                <p class="mb-2"><small class="text-muted">Supplier: {{ product.supplier.username }}</small></p>
+                <a href="{{ url_for('view_product', id=product.id) }}" class="btn btn-primary w-100">View Details</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="alert alert-info">
+    <p class="mb-0">No products found matching your search criteria.</p>
+</div>
+{% endif %}
+{% endblock %}

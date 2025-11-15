@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}{{ action }} Product - MSME Marketplace{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-body">
+                <h2 class="card-title mb-4">{{ action }} Product</h2>
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Product Name</label>
+                        <input type="text" class="form-control" id="name" name="name" 
+                               value="{% if product %}{{ product.name }}{% endif %}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea class="form-control" id="description" name="description" 
+                                  rows="4" required>{% if product %}{{ product.description }}{% endif %}</textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="price" class="form-label">Price ($)</label>
+                            <input type="number" step="0.01" class="form-control" id="price" name="price" 
+                                   value="{% if product %}{{ product.price }}{% endif %}" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="min_order_qty" class="form-label">Minimum Order Quantity</label>
+                            <input type="number" class="form-control" id="min_order_qty" name="min_order_qty" 
+                                   value="{% if product %}{{ product.min_order_qty }}{% endif %}" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="category" class="form-label">Category</label>
+                        <select class="form-select" id="category" name="category" required>
+                            <option value="">Select category...</option>
+                            <option value="Electronics" {% if product and product.category == 'Electronics' %}selected{% endif %}>Electronics</option>
+                            <option value="Clothing" {% if product and product.category == 'Clothing' %}selected{% endif %}>Clothing</option>
+                            <option value="Food" {% if product and product.category == 'Food' %}selected{% endif %}>Food</option>
+                            <option value="Furniture" {% if product and product.category == 'Furniture' %}selected{% endif %}>Furniture</option>
+                            <option value="Toys" {% if product and product.category == 'Toys' %}selected{% endif %}>Toys</option>
+                            <option value="Books" {% if product and product.category == 'Books' %}selected{% endif %}>Books</option>
+                            <option value="Sports" {% if product and product.category == 'Sports' %}selected{% endif %}>Sports</option>
+                            <option value="Other" {% if product and product.category == 'Other' %}selected{% endif %}>Other</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="image_filename" class="form-label">Image URL (optional)</label>
+                        <input type="text" class="form-control" id="image_filename" name="image_filename" 
+                               value="{% if product %}{{ product.image_filename }}{% endif %}"
+                               placeholder="https://example.com/image.jpg">
+                        <small class="text-muted">Enter a public URL to an image</small>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">{{ action }} Product</button>
+                        <a href="{{ url_for('supplier_dashboard') }}" class="btn btn-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
